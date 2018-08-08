@@ -1,0 +1,13 @@
+SQL> insert into department values('Engineering',13,'333445555',null);
+
+1 row created.
+
+SQL> insert into department values('Manufacturing',10,'111111100',null);
+
+1 row created.
+
+SQL> insert into department values('Housekeeping',20,'888665555',null);
+
+1 row created.
+
+SQL> spool off

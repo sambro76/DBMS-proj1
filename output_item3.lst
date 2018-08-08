@@ -1,0 +1,347 @@
+SQL> select * from employee
+  2  where lname='James' or lname='Jones';
+
+FNAME           M LNAME           SSN       BDATE                               
+--------------- - --------------- --------- ---------                           
+ADDRESS                        S     SALARY SUPER_SSN        DNO                
+------------------------------ - ---------- --------- ----------                
+Jared           D James           111111100 10-OCT-66                           
+123 Peachtr,Atlanta,GA         M      85000                    6                
+                                                                                
+John            C James           555555500 30-JUN-75                           
+766 Bloomington,Sacramento,CA  M      81000                    8                
+                                                                                
+Jon             C Jones           111111101 14-NOV-67                           
+111 Allgood,Atlanta,GA         M      45000 111111100          6                
+                                                                                
+
+FNAME           M LNAME           SSN       BDATE                               
+--------------- - --------------- --------- ---------                           
+ADDRESS                        S     SALARY SUPER_SSN        DNO                
+------------------------------ - ---------- --------- ----------                
+Megan           G Jones           254937381 02-MAR-61                           
+528 Stone CT,Chicago,IL        F      62000 666666600          8                
+                                                                                
+
+SQL> select * from employee
+  2  where fname='Kim' or fname='Wilson';
+
+FNAME           M LNAME           SSN       BDATE                               
+--------------- - --------------- --------- ---------                           
+ADDRESS                        S     SALARY SUPER_SSN        DNO                
+------------------------------ - ---------- --------- ----------                
+Kim             C Grace           333333300 23-OCT-70                           
+667 Mills Ave,Sacramento,CA    F      79000                    6                
+                                                                                
+Kim             G Ted             444222666 15-APR-68                           
+3648 Tree Cir,Austin,TX        M      50000 999999999          8                
+                                                                                
+Wilson          A Holmes          242916639 02-JUN-71                           
+21 South Co,Arlington,TX       M      72500 555555500          4                
+                                                                                
+
+SQL> 
+SQL> /*3.3 */
+SQL> select fname,minit,lname,ssn,total_hours
+  2  from employee, (select essn, count(*) as num_proj, sum(hours) as total_hours
+  3      from works_on
+  4      group by essn
+  5      having count(*)>1
+  6      )
+  7  where ssn=essn
+  8  ;
+
+FNAME           M LNAME           SSN       TOTAL_HOURS                         
+--------------- - --------------- --------- -----------                         
+Cameron         D Thirteen        111422203          50                         
+John            B Smith           123456789          40                         
+Richard         T Koelbel         214370999          39                         
+Erin            A Maxfield        242535609          40                         
+Wilson          A Holmes          242916639          35                         
+Jake            D Sheen           245239264          55                         
+Frank           T Wong            333445555          30                         
+Leonard         H Moody           349273344          25                         
+Percy           M Liang           398172999          20                         
+Joyce           A English         453453453          40                         
+Red             A Bacher          666666613          50                         
+
+FNAME           M LNAME           SSN       TOTAL_HOURS                         
+--------------- - --------------- --------- -----------                         
+Jennifer        S Wallace         987654321          35                         
+Ahmad           V Jabbar          987987987          40                         
+Alicia          J Zelaya          999887777          40                         
+Roy             C Lewallen        999999999          40                         
+
+15 rows selected.
+
+SQL> 
+SQL> /*3.4 */
+SQL> select p.pnumber, p.pname, count (*)
+  2  from project p, works_on w
+  3  where p.pnumber=w.pno
+  4  group by p.pnumber, p.pname
+  5  order by pnumber
+  6  ;
+
+   PNUMBER PNAME                  COUNT(*)                                      
+---------- -------------------- ----------                                      
+         4 EntityAnnot                   3                                      
+         5 Analysis                      6                                      
+         6 EventManagement               5                                      
+         7 FoodDistribution              5                                      
+        10 Computerization               6                                      
+        11 ConfigMgmt                    3                                      
+        13 DataMining                    1                                      
+        20 Reorganization                4                                      
+        22 SearchEngine                  2                                      
+        29 MotherBoard                   3                                      
+        30 Benefits                      4                                      
+
+   PNUMBER PNAME                  COUNT(*)                                      
+---------- -------------------- ----------                                      
+        61 OperatingSystem              11                                      
+        62 DatabaseSystems              11                                      
+        63 Middleware                    9                                      
+        70 Advertizing                   4                                      
+        91 InkjetPrinters               10                                      
+        92 LaserPrinters                 5                                      
+        95 HumanResource                 4                                      
+
+18 rows selected.
+
+SQL> 
+SQL> /*3.5 */
+SQL> select w.essn, e.fname, e.lname, w.pno, p.pname, w.hours
+  2  from works_on w, employee e, project p
+  3  where w.essn=e.ssn and e.dno=5 and w.pno=p.pnumber
+  4  ;
+
+ESSN      FNAME           LNAME                  PNO PNAME                      
+--------- --------------- --------------- ---------- --------------------       
+     HOURS                                                                      
+----------                                                                      
+453453453 Joyce           English                  5 Analysis                   
+        20                                                                      
+                                                                                
+123456789 John            Smith                    5 Analysis                   
+      32.5                                                                      
+                                                                                
+333445555 Frank           Wong                    10 Computerization            
+        10                                                                      
+                                                                                
+
+ESSN      FNAME           LNAME                  PNO PNAME                      
+--------- --------------- --------------- ---------- --------------------       
+     HOURS                                                                      
+----------                                                                      
+636669233 Michael         Morgan                   4 EntityAnnot                
+        11                                                                      
+                                                                                
+453453453 Joyce           English                  6 EventManagement            
+        20                                                                      
+                                                                                
+123456789 John            Smith                    6 EventManagement            
+       7.5                                                                      
+                                                                                
+
+ESSN      FNAME           LNAME                  PNO PNAME                      
+--------- --------------- --------------- ---------- --------------------       
+     HOURS                                                                      
+----------                                                                      
+666884444 Ramesh          Narayan                  7 FoodDistribution           
+        40                                                                      
+                                                                                
+333445555 Frank           Wong                     7 FoodDistribution           
+        10                                                                      
+                                                                                
+906218888 James           Miller                  29 MotherBoard                
+        15                                                                      
+                                                                                
+
+ESSN      FNAME           LNAME                  PNO PNAME                      
+--------- --------------- --------------- ---------- --------------------       
+     HOURS                                                                      
+----------                                                                      
+333445555 Frank           Wong                    20 Reorganization             
+        10                                                                      
+                                                                                
+
+10 rows selected.
+
+SQL> 
+SQL> /*3.6 */
+SQL> select lname, fname, total_hours
+  2  from employee, (select essn, total_hours
+  3      from (select essn, sum(hours) as total_hours
+  4          from works_on
+  5          group by essn, hours)
+  6      where total_hours>40)
+  7  where ssn=essn
+  8  ;
+
+LNAME           FNAME           TOTAL_HOURS                                     
+--------------- --------------- -----------                                     
+Thirteen        Cameron                  45                                     
+Zell            Josh                     48                                     
+Sheen           Jake                     50                                     
+Chase           Jeff                     46                                     
+Ball            Nandita                  44                                     
+
+SQL> 
+SQL> /*3.7 */
+SQL> select super_ssn, count(*)
+  2  from employee
+  3  where super_ssn is not null
+  4  group by super_ssn
+  5  ;
+
+SUPER_SSN   COUNT(*)                                                            
+--------- ----------                                                            
+333445555          3                                                            
+555555500          3                                                            
+666666600          4                                                            
+666666611          1                                                            
+444444401          1                                                            
+123456789          1                                                            
+111111100          4                                                            
+444444400          7                                                            
+666666602          3                                                            
+666666607          1                                                            
+666666612          2                                                            
+
+SUPER_SSN   COUNT(*)                                                            
+--------- ----------                                                            
+555555501          2                                                            
+999999999          3                                                            
+222222200          3                                                            
+222222201          2                                                            
+666666604          1                                                            
+444444402          1                                                            
+987654321          2                                                            
+666666603          2                                                            
+112244668          2                                                            
+222333444          1                                                            
+333333300          1                                                            
+
+SUPER_SSN   COUNT(*)                                                            
+--------- ----------                                                            
+444444403          1                                                            
+666666601          1                                                            
+666666613          2                                                            
+987987987          1                                                            
+888665555          3                                                            
+666666610          1                                                            
+
+28 rows selected.
+
+SQL> 
+SQL> /*3.8 */
+SQL> select pno, sum(hours) total_hours
+  2  from works_on
+  3  group by pno
+  4  order by pno;
+
+       PNO TOTAL_HOURS                                                          
+---------- -----------                                                          
+         4          61                                                          
+         5        88.5                                                          
+         6        44.5                                                          
+         7          74                                                          
+        10         119                                                          
+        11          65                                                          
+        13          18                                                          
+        20          34                                                          
+        22          34                                                          
+        29          40                                                          
+        30          59                                                          
+
+       PNO TOTAL_HOURS                                                          
+---------- -----------                                                          
+        61         358                                                          
+        62         347                                                          
+        63         250                                                          
+        70          72                                                          
+        91         332                                                          
+        92         158                                                          
+        95         101                                                          
+
+18 rows selected.
+
+SQL> 
+SQL> /*3.9 */
+SQL> select ssn, fname, lname, num_dependent
+  2  from employee, (select essn, count(*) as num_dependent
+  3      from dependent
+  4      group by essn)
+  5  where ssn=essn and num_dependent>2
+  6  ;
+
+SSN       FNAME           LNAME           NUM_DEPENDENT                         
+--------- --------------- --------------- -------------                         
+444444401 Bonnie          Bays                        3                         
+666666608 Arnold          Head                        3                         
+
+SQL> 
+SQL> /*3.10 */
+SQL> select ssn, fname, lname, num_children
+  2  from employee, (select essn, count(*) as num_children
+  3      from dependent
+  4      where relationship='Children'
+  5      group by essn)
+  6  where ssn=essn and num_children>1
+  7  ;
+
+SSN       FNAME           LNAME           NUM_CHILDREN                          
+--------- --------------- --------------- ------------                          
+444444401 Bonnie          Bays                       2                          
+666666608 Arnold          Head                       2                          
+
+SQL> 
+SQL> /*3.11 */
+SQL> select e.fname, e.lname
+  2  from employee e, dept_locations d
+  3  where e.dno=d.dnumber and d.dlocation='Atlanta'
+  4  ;
+
+FNAME           LNAME                                                           
+--------------- ---------------                                                 
+Jared           James                                                           
+Jon             Jones                                                           
+Justin          Mark                                                            
+Brad            Knight                                                          
+Kim             Grace                                                           
+Jeff            Chase                                                           
+Nandita         Ball                                                            
+John            Ed                                                              
+Jose            Barbara                                                         
+Penny           Wolowitz                                                        
+Debra           Hall                                                            
+
+FNAME           LNAME                                                           
+--------------- ---------------                                                 
+Jake            Sheen                                                           
+Cindy           Burklow                                                         
+Zach            Geller                                                          
+Alex            Yu                                                              
+Christina       Hisel                                                           
+
+16 rows selected.
+
+SQL> 
+SQL> /*3.12 */
+SQL> select dname, d.dnumber, dlocation, num_proj
+  2  from department d, (select dnumber, dlocation, num_proj
+  3      from dept_locations, (select dnum, count(*) as num_proj
+  4          from project
+  5          group by dnum
+  6          )
+  7      where dlocation='Houston' and dnumber=dnum) d_tmp
+  8  where d.dnumber=d_tmp.dnumber
+  9  ;
+
+DNAME              DNUMBER DLOCATION         NUM_PROJ                           
+--------------- ---------- --------------- ----------                           
+Headquarters             1 Houston                  1                           
+Research                 5 Houston                  1                           
+
+SQL> spool off

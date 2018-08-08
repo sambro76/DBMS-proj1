@@ -1,0 +1,25 @@
+SQL> /*5: 3 Insert commands that violate all 3 integrity constraints
+SQL> Primary Key Constraint */
+SQL> insert into department values('Engineering',5,'333445555',null);
+insert into department values('Engineering',5,'333445555',null)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (MYDB.DEPTPK) violated 
+/*This violates primary key 'dnumber' */
+
+SQL> insert into department values('Research',10,'333445555',null);
+insert into department values('Research',10,'333445555',null)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (MYDB.DEPTSK) violated 
+/*This violates unique key 'dname' */
+
+SQL> /*Foreign Key Integrity Constraint */
+insert into department values('Engineering',10,'333000000',null)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (MYDB.DEPTMGRFK) violated - parent key not 
+found 
+/*This violates foreign key constraint with primary key which doesn't exist in employee table*/
+
+SQL> spool off

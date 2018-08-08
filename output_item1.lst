@@ -1,0 +1,107 @@
+SQL> /*1: Create Tables: some foreign keys are ignored and are inserted after loading the records*/
+SQL> create table department
+  2  (dname varchar(15) not null,
+  3  dnumber int not null,
+  4  mgr_ssn char(9) not null,
+  5  mgr_start_date date );
+
+Table created.
+
+SQL> 
+SQL> create table dept_locations
+  2  (dnumber int not null,
+  3  dlocation varchar(15) not null);
+
+Table created.
+
+SQL> 
+SQL> create table employee
+  2  (fname varchar(15) not null,
+  3  minit char,
+  4  lname varchar(15) not null,
+  5  ssn char(9) not null,
+  6  bdate date, address varchar(30), sex char,
+  7  salary decimal(10,2),
+  8  super_ssn char(9),
+  9  dno int not null );
+
+Table created.
+
+SQL> 
+SQL> create table works_on
+  2  (essn char(9) not null,
+  3  pno int not null,
+  4  hours decimal(3,1) not null );
+
+Table created.
+
+SQL> 
+SQL> create table project
+  2  (pname varchar(20) not null,
+  3  pnumber int not null,
+  4  plocation varchar(20),
+  5  dnum int not null);
+
+Table created.
+
+SQL> 
+SQL> create table dependent
+  2  (essn char(9) not null, dependent_name varchar(15) not null,
+  3  sex char, bdate date, relationship varchar(8));
+
+Table created.
+
+SQL> 
+SQL> alter table employee add constraint emppk primary key(ssn);
+
+Table altered.
+
+SQL> alter table employee add constraint empsuperfk foreign key(super_ssn) references employee(ssn);
+
+Table altered.
+
+SQL> alter table department add constraint deptpk primary key(dnumber);
+
+Table altered.
+
+SQL> alter table department add constraint deptsk unique(dname);
+
+Table altered.
+
+SQL> alter table dept_locations add constraint dept_loc_pk primary key(dnumber, dlocation);
+
+Table altered.
+
+SQL> alter table dept_locations add constraint dept_loc_fk foreign key(dnumber) references department(dnumber);
+
+Table altered.
+
+SQL> alter table project add constraint projpk primary key(pnumber);
+
+Table altered.
+
+SQL> alter table project add constraint projsk unique(pname);
+
+Table altered.
+
+SQL> alter table project add constraint projfk foreign key(dnum) references department(dnumber);
+
+Table altered.
+
+SQL> alter table works_on add constraint wrkson_pk primary key(essn, pno);
+
+Table altered.
+
+SQL> alter table works_on add constraint wrkson_fk1 foreign key (essn) references employee(ssn);
+
+Table altered.
+
+SQL> alter table dependent add constraint depend_pk primary key(essn, dependent_name);
+
+Table altered.
+
+SQL> alter table dependent add constraint depend_fk foreign key (essn) references employee(ssn);
+
+Table altered.
+
+SQL> spool off

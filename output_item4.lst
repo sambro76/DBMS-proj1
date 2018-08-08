@@ -1,0 +1,68 @@
+SQL> /*4.Write down the queries
+SQL> 4.1: ORA-00001: unique constraint (DEPTPK) violated */
+SQL> insert into department values('Services', 1, '123456789', '11-AUG-2012');
+insert into department values('Services', 1, '123456789', '11-AUG-2012')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (MYDB.DEPTPK) violated 
+
+
+SQL> /*4.2: ORA-00001: unique constraint (DEPTPK) violated */
+SQL> insert into department values('Purchasing', 3, '990110110', '02-FEB-2013');
+insert into department values('Purchasing', 3, '990110110', '02-FEB-2013')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (MYDB.DEPTPK) violated 
+
+
+SQL> /*4.3: 1 row inserted, no violation */
+SQL> insert into department values('Customers', 12, '333445555', '14-JAN-2013');
+
+1 row created.
+
+SQL> /*4.4: 1 row updated */
+SQL> update dept_locations set dnumber=9 where dlocation='Seattle';
+
+1 row updated.
+
+SQL> /*4.5: 0 row updated because there is no employee with ssn=444444444" */
+SQL> update employee set salary=55000 where ssn='444444444';
+
+0 rows updated.
+
+SQL> /*4.6: ORA-00001: unique constraint violated since ssn is already existed */
+SQL> insert into employee values('Jane', 'B', 'Smith', '666666606', '01-MAR-1980', '3556 W Second Street,Miami,FL', 'F', 85000, '666666603', 5);
+insert into employee values('Jane', 'B', 'Smith', '666666606', '01-MAR-1980', '3556 W Second Street,Miami,FL', 'F', 85000, '666666603', 5)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (MYDB.EMPPK) violated 
+
+
+SQL> /*4.7: 0 row updated because employee with ssn=666884444 doesn't work on project number 1 */
+SQL> update works_on set hours=25 where pno=1 and essn='666884444';
+
+0 rows updated.
+
+SQL> /*4.8: ORA-02292: integrity constraint (WRKSON_FK1) violated */
+SQL> delete from employee where ssn='432765098';
+delete from employee where ssn='432765098'
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (MYDB.WRKSON_FK1) violated - child record found 
+
+
+SQL> /*4.9: ORA-02292: integrity constraint (EMPDEPTFK) violated */
+SQL> delete from department where dnumber=9;
+delete from department where dnumber=9
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (MYDB.DEPT_LOC_FK) violated - child record 
+found 
+
+
+SQL> /*4.10: 3 rows deleted */
+SQL> delete from dependent where essn='666666608';
+
+3 rows deleted.
+
+SQL> spool off

@@ -1,0 +1,10 @@
+SQL> /*6: Delete a record that violates a referential integrity constraint */
+SQL> delete from department where dnumber=6;
+delete from department where dnumber=6
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (MYDB.DEPT_LOC_FK) violated - child record 
+found 
+/* This violates foreign key in dept_locations which links to department 'dnumber' primary key */
+
+SQL> spool off
